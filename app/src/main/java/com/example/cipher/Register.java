@@ -3,7 +3,6 @@ package com.example.cipher;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -34,7 +33,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
         mAuth = FirebaseAuth.getInstance();
 
         email = findViewById(R.id.registeremail);
@@ -86,8 +85,8 @@ public class Register extends AppCompatActivity {
 
                     String currentUserID = mAuth.getCurrentUser().getUid();
                     HashMap<String, Object> userdataMap = new HashMap<>();
-                    userdataMap.put("email", userEmail);
-                    userdataMap.put("name", userName);
+                    userdataMap.put("email", userEmail); // Use string values
+                    userdataMap.put("name", userName);   // Use string values
 
                     databaseReference.child("users").child(currentUserID).updateChildren(userdataMap);
                 } else {
@@ -102,3 +101,11 @@ public class Register extends AppCompatActivity {
         return pattern.matcher(email).matches();
     }
 }
+
+//{
+//  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
+//  "rules": {
+//    ".read": false,
+//    ".write": false
+//  }
+//}
