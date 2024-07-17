@@ -1,6 +1,7 @@
 package com.example.cipher;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ public class Login extends AppCompatActivity {
     String userEmail, userPW;
     ImageButton btn;
     FirebaseAuth mAuth;
-
+    public static final String SHARED_PREFS = "sharedPrefs";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         mAuth = FirebaseAuth.getInstance();
+
+        checkBox();
 
         email = findViewById(R.id.loginemail);
         pw = findViewById(R.id.loginpassword);
@@ -66,6 +69,18 @@ public class Login extends AppCompatActivity {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
         });
+    }
+
+    private void checkBox() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String check = sharedPreferences.getString("name", "");
+        if(check.equals("true")){
+            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+            // Redirect to main activity or another activity
+            Intent intent = new Intent(Login.this, HomePage.class); // Replace MainActivity.class with your main activity
+            startActivity(intent);
+            finish();
+        }
     }
 
     private boolean validateInput(String email, String password) {
@@ -99,6 +114,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("name", "true");
+                    editor.apply();
                     FirebaseUser user = mAuth.getCurrentUser();
                     String userId = user != null ? user.getUid() : null;
                     Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
