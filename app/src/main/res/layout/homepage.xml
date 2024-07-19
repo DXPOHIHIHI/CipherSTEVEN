@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <ImageButton
-        android:id="@+id/imageButton15"
+        android:id="@+id/toImport"
         android:layout_width="0dp"
         android:layout_height="145dp"
         android:background="#00FFFFFF"
@@ -69,7 +69,7 @@
         app:srcCompat="@drawable/importz" />
 
     <ImageButton
-        android:id="@+id/imageButton14"
+        android:id="@+id/toTrack"
         android:layout_width="0dp"
         android:layout_height="145dp"
         android:background="#00FFFFFF"
@@ -84,7 +84,7 @@
         app:srcCompat="@drawable/track" />
 
     <ImageButton
-        android:id="@+id/imageButton13"
+        android:id="@+id/toScan"
         android:layout_width="0dp"
         android:layout_height="145dp"
         android:background="#00FFFFFF"
@@ -118,7 +118,6 @@
         android:textColor="@color/blue"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -132,7 +131,6 @@
         android:text="Steven Zuriel Catan"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Design" />
 
@@ -159,18 +157,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:background="#00FFFFFF"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Design"
-        app:srcCompat="@drawable/user" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
@@ -186,7 +172,7 @@
         app:layout_constraintGuide_percent="0.66" />
 
     <ImageButton
-        android:id="@+id/imageButton10"
+        android:id="@+id/toTutorial"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -203,7 +189,7 @@
         app:srcCompat="@drawable/question" />
 
     <ImageButton
-        android:id="@+id/imageButton11"
+        android:id="@+id/toHome"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -220,7 +206,7 @@
         app:srcCompat="@drawable/home" />
 
     <ImageButton
-        android:id="@+id/imageButton12"
+        android:id="@+id/toProfile"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"

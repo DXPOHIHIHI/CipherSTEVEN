@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class HomePage extends AppCompatActivity {
 
     Button logout;
     public static final String SHARED_PREFS = "sharedPrefs";
+    ImageButton toProfile, toScan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,24 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+        });
+
+        toProfile = findViewById(R.id.toProfile);
+        toProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, Profile.class);
+            startActivity(intent);
+        });
+
+        toProfile = findViewById(R.id.toProfile);
+        toProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, Profile.class);
+            startActivity(intent);
+        });
+
+        toScan = findViewById(R.id.toScan);
+        toScan.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, ScanQR.class);
+            startActivity(intent);
         });
     }
 }
