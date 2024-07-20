@@ -38,5 +38,12 @@ public class HomePage extends AppCompatActivity {
             Intent intent = new Intent(HomePage.this, ScanQR.class);
             startActivity(intent);
         });
+
+        toProfile = findViewById(R.id.toProfile);
+        toProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, Profile.class);
+            startActivity(intent);
+        });
+
     }
 }
