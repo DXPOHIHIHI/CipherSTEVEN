@@ -3,6 +3,7 @@ package com.example.cipher;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,16 +23,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
 public class Login extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";  // Define TAG here
 
     EditText email, pw;
     String userEmail, userPW;
     ImageButton btn;
     FirebaseAuth mAuth;
     public static final String SHARED_PREFS = "sharedPrefs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,27 +119,56 @@ public class Login extends AppCompatActivity {
     }
 
     private void authenticateUser(String userEmail, String userPW) {
-        mAuth.signInWithEmailAndPassword(userEmail, userPW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
+        mAuth.signInWithEmailAndPassword(userEmail, userPW).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    String userId = user.getUid();
+                    Log.d(TAG, "User ID: " + userId);
+
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("name", "true");
+                    editor.putString("userId", userId);
+                    editor.putString("email", userEmail);
                     editor.apply();
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    String userId = user != null ? user.getUid() : null;
-                    Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    // Redirect to main activity or another activity
-                    Intent intent = new Intent(Login.this, HomePage.class); // Replace MainActivity.class with your main activity
-                    startActivity(intent);
-                    finish();
+
+                    // Update your database URL here
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+                    DatabaseReference userRef = databaseReference.child("users").child(userId);
+
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String username = dataSnapshot.child("name").getValue(String.class);
+                            String department = dataSnapshot.child("department").getValue(String.class);
+
+                            editor.putString("name", username);
+                            editor.putString("department", department != null ? department : "Department");
+                            editor.apply();
+
+                            Log.d(TAG, "Login Successful: USER_ID = " + userId + ", NAME = " + username + ", DEPARTMENT = " + department);
+                            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this, HomePage.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.e(TAG, "Error fetching user details: " + databaseError.getMessage());
+                            Toast.makeText(Login.this, "Error fetching user details", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
-                    handleLoginError(task.getException());
+                    Log.e(TAG, "User is null after successful sign-in");
+                    Toast.makeText(Login.this, "Login failed: User data is null", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                handleLoginError(task.getException());
             }
         });
     }
+
 
     private void handleLoginError(Exception exception) {
         String errorMessage;
