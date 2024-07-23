@@ -49,8 +49,6 @@ public class Login extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        checkBox();
-
         email = findViewById(R.id.loginemail);
         pw = findViewById(R.id.loginpassword);
         btn = findViewById(R.id.loginbutton);
@@ -80,44 +78,6 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void checkBox() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        String check = sharedPreferences.getString("name", "");
-        if(check.equals("true")){
-            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-            // Redirect to main activity or another activity
-            Intent intent = new Intent(Login.this, HomePage.class); // Replace MainActivity.class with your main activity
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    private boolean validateInput(String email, String password) {
-        if (email.isEmpty()) {
-            this.email.setError("Email is required");
-            this.email.requestFocus();
-            return false;
-        } else if (!isValidEmail(email)) {
-            this.email.setError("Enter a valid email");
-            this.email.requestFocus();
-            return false;
-        } else if (password.isEmpty()) {
-            this.pw.setError("Password is required");
-            this.pw.requestFocus();
-            return false;
-        } else if (password.length() < 6) {
-            this.pw.setError("Password must be at least 6 characters");
-            this.pw.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+$");
-        return pattern.matcher(email).matches();
-    }
-
     private void authenticateUser(String userEmail, String userPW) {
         mAuth.signInWithEmailAndPassword(userEmail, userPW).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -132,7 +92,6 @@ public class Login extends AppCompatActivity {
                     editor.putString("email", userEmail);
                     editor.apply();
 
-                    // Update your database URL here
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
                     DatabaseReference userRef = databaseReference.child("users").child(userId);
 
@@ -169,7 +128,6 @@ public class Login extends AppCompatActivity {
         });
     }
 
-
     private void handleLoginError(Exception exception) {
         String errorMessage;
         if (exception instanceof FirebaseAuthInvalidUserException) {
@@ -182,5 +140,31 @@ public class Login extends AppCompatActivity {
             errorMessage = "Authentication failed: " + exception.getMessage();
         }
         Toast.makeText(Login.this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+
+    private boolean validateInput(String email, String password) {
+        if (email.isEmpty()) {
+            this.email.setError("Email is required");
+            this.email.requestFocus();
+            return false;
+        } else if (!isValidEmail(email)) {
+            this.email.setError("Enter a valid email");
+            this.email.requestFocus();
+            return false;
+        } else if (password.isEmpty()) {
+            this.pw.setError("Password is required");
+            this.pw.requestFocus();
+            return false;
+        } else if (password.length() < 6) {
+            this.pw.setError("Password must be at least 6 characters");
+            this.pw.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+$");
+        return pattern.matcher(email).matches();
     }
 }
