@@ -48,7 +48,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/scanner_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
@@ -65,18 +65,20 @@
 
 
     <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/scanner_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:id="@+id/scanner_view"
         app:autoFocusButtonColor="@android:color/white"
         app:autoFocusButtonVisible="true"
         app:flashButtonColor="@color/white"
         app:flashButtonVisible="true"
-        app:maskColor="@android:color/background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.324"
+        app:maskColor="@android:color/background_dark" />
 
     <Spinner
         android:id="@+id/spinner1"
@@ -96,7 +98,9 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner1" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner1"
+        app:layout_constraintVertical_bias="0.55" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#292929</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="blue">#0A84FF</color>
-    <color name="gray">#AEAEAE</color>
     <color name="purple">#473E97</color>
+
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">@color/black</color>
+    <color name="colorAccent">@color/blue</color>
+
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#183471</color>
+    <color name="graphBlue">#4E7AC7</color>
+    <color name="barBlue">#4285F4</color>
+    <color name="border">#1E1E1E</color>
+    <color name="bg">#CED5DC</color>
+    <color name="green">#388E3C</color>
+    <color name="yellow">#DAC21F</color>
+    <color name="red">#D32F2F</color>
+    <color name="gray">#817D7D</color>
 </resources>
