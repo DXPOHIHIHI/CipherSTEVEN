@@ -9,9 +9,8 @@
     app:cardElevation="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:padding="15dp">
 
         <TextView
@@ -19,52 +18,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/interbold"
             android:text="Send to"
             android:textColor="@color/colorPrimary"
-            android:textSize="17sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTitle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.033"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scannedID" />
-
-        <ImageView
-            android:id="@+id/plusIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="44dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/editEmail"
-            app:layout_constraintTop_toBottomOf="@+id/editTitle"
-            app:srcCompat="@drawable/icons8_plus_30" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelBtn"
@@ -90,6 +64,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
+
                 android:padding="12dp"
                 android:shadowColor="#C8A7A7"
                 android:text="Confirm"
@@ -102,16 +77,35 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/editTitle"
+            android:id="@+id/editEmail"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:ems="10"
-            android:hint="Document Description"
             android:inputType="text"
+            android:hint="Name"
+            app:layout_constraintBottom_toTopOf="@+id/spinner1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.818" />
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dialog"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.836" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.cardview.widget.CardView>
