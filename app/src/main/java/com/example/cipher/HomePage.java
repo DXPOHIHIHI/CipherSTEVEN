@@ -15,15 +15,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 public class HomePage extends AppCompatActivity {
 
-    ImageButton toProfile, toScan, toTutorial;
+    ImageButton toProfile, toScan, toTutorial, toTrack, toImport;
     public static final String SHARED_PREFS = "sharedPrefs";
     TextView userNameTextView;
     EditText editTest;
@@ -39,14 +33,11 @@ public class HomePage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //allgoods
 
         userNameTextView = findViewById(R.id.textView5);
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String userName = sharedPreferences.getString("name", "User Name not found");
         userNameTextView.setText(userName);
-
-        editTest = findViewById(R.id.editTest);
 
         toProfile = findViewById(R.id.toProfile);
         toProfile.setOnClickListener(v -> {
@@ -70,43 +61,16 @@ public class HomePage extends AppCompatActivity {
             startActivity(intent);
         });
 
-        toTutorial = findViewById(R.id.toTutorial);
-        toTutorial.setOnClickListener(view -> {
-            String emailToFind = editTest.getText().toString().trim();
-            if (!emailToFind.isEmpty()) {
-                findUserIdByEmail(emailToFind);
-            } else {
-                Toast.makeText(HomePage.this, "Please enter an email to search", Toast.LENGTH_SHORT).show();
-            }
+        toTrack = findViewById(R.id.toTrack);
+        toTrack.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, TrackDoc.class);
+            startActivity(intent);
         });
-    }
 
-    private void findUserIdByEmail(String email) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("users");
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean found = false;
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String userEmail = userSnapshot.child("email").getValue(String.class);
-                    if (userEmail != null && userEmail.equals(email)) {
-                        String userId = userSnapshot.getKey();
-                        Toast.makeText(HomePage.this, "User ID: " + userId, Toast.LENGTH_LONG).show();
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    Toast.makeText(HomePage.this, "Email not found", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(HomePage.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        toImport = findViewById(R.id.toImport);
+        toImport.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, ImportDoc.class);
+            startActivity(intent);
         });
     }
 }
