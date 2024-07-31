@@ -292,7 +292,7 @@ public class ScanQR extends AppCompatActivity {
     private void updateRecipientData(String userId, String title) {
         String currentUserId = mAuth.getCurrentUser().getUid();
         String action = "Send"; // Automatically set action to "Send"
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        long timestamp = System.currentTimeMillis();
 
         DatabaseReference currentUserRef = databaseReference.child("users").child(currentUserId).child("scannedDocs").child(scannedContent);
         currentUserRef.child("timestamp").setValue(timestamp);
@@ -305,17 +305,68 @@ public class ScanQR extends AppCompatActivity {
         documentRef.child("recipients").child(userId).child("timestamp").setValue("N/A");
 
         //Update sender details to documents node as well
-        documentRef.child("sender").child(currentUserId).child("status").setValue(action);
-        documentRef.child("sender").child(currentUserId).child("timestamp").setValue(timestamp);
+        documentRef.child("sender").child("status").setValue(action);
+        documentRef.child("sender").child("timestamp").setValue(timestamp);
 
         // Adding scannedDocs to the recipient's node
         DatabaseReference recipientRef = databaseReference.child("users").child(userId).child("scannedDocs").child(scannedContent);
         recipientRef.child("action").setValue(null);
         recipientRef.child("timestamp").setValue("N/A");
         recipientRef.child("title").setValue(title);
+        recipientRef.child("senderId").setValue(currentUserId);
+
+        // Fetching recipient's name
+        DatabaseReference recipientNameRef = databaseReference.child("users").child(userId).child("name");
+        recipientNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String recipientName = dataSnapshot.getValue(String.class);
+                if (recipientName != null) {
+                    // Update recipient's name in the document node
+                    documentRef.child("recipients").child(userId).child("name").setValue(recipientName);
+
+                    // Optionally, you can also update the name in other relevant places if needed
+                } else {
+                    Log.e("ScanQR", "Recipient name not found for userId: " + userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ScanQR", "Failed to fetch recipient name: " + databaseError.getMessage());
+            }
+        });
+
+        // Fetching sender's name
+        DatabaseReference senderNameRef = databaseReference.child("users").child(currentUserId).child("name");
+        senderNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String senderName = dataSnapshot.getValue(String.class);
+                if (senderName != null) {
+                    // Update sender's name in the document node
+                    documentRef.child("sender").child("name").setValue(senderName);
+                    documentRef.child("sender").child("senderId").setValue(currentUserId);
+                    recipientRef.child("sender").setValue(senderName);
+
+                    // Optionally, you can also update the name in other relevant places if needed
+                } else {
+                    Log.e("ScanQR", "Sender name not found for currentUserId: " + currentUserId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ScanQR", "Failed to fetch sender name: " + databaseError.getMessage());
+            }
+        });
+
+
 
         Toast.makeText(ScanQR.this, "Data sent successfully!", Toast.LENGTH_SHORT).show();
     }
+
+
 
     private void updateReceiver(Spinner spinner1) {
         if (spinner1 != null) {
@@ -337,7 +388,7 @@ public class ScanQR extends AppCompatActivity {
                     Log.d("UserName", "Name: " + name);
 
                     // Update receiver node
-                    String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+                    long timestamp = System.currentTimeMillis();
                     scannedDocsRef.child("timestamp").setValue(timestamp);
                     scannedDocsRef.child("action").setValue(spinnerAction);
 
