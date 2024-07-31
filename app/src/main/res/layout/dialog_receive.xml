@@ -10,35 +10,35 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:padding="15dp">
+
 
         <TextView
             android:id="@+id/scannedID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/interbold"
-            android:text="Send to"
+            android:text="Received to"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelBtn"
@@ -76,33 +76,17 @@
                 app:strokeColor="@color/black" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="Name"
-            app:layout_constraintBottom_toTopOf="@+id/spinner1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.818" />
-
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginTop="25dp"
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dialog"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.836" />
+            app:layout_constraintTop_toBottomOf="@+id/scannedID" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

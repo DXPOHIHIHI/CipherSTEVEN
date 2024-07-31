@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +53,7 @@ public class ScanQR extends AppCompatActivity {
     private ImageButton toHome;
     private TextView scanTxt;
 
-    Dialog dialog_send;
+    Dialog dialog_send, dialog_receive;
     Button cancelBtn, confirmBtn;
     EditText editEmail, editTitle;
     Spinner spinner1;
@@ -100,7 +99,7 @@ public class ScanQR extends AppCompatActivity {
                         isDialogDisplayed = true;
                         scannedContent = result.getText();
                         scanTxt.setText(scannedContent); // Set the scanned content to the TextView
-                        showDialog();
+                        handleScanResult(scannedContent);
                     }
                 });
             }
@@ -116,21 +115,79 @@ public class ScanQR extends AppCompatActivity {
                 .getReference();
     }
 
-    // Initialize a counter to track the number of added EditTexts
+    private void handleScanResult(String scannedContent) {
+        String currentUserId = mAuth.getCurrentUser().getUid();
+        DatabaseReference userRef = databaseReference.child("users").child(currentUserId).child("scannedDocs");
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean found = false;
+                for (DataSnapshot docSnapshot : dataSnapshot.getChildren()) {
+                    if (docSnapshot.getKey().equals(scannedContent)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    showDialogReceive();
+                } else {
+                    showDialogSend();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ScanQR.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                isDialogDisplayed = false;
+                mCodeScanner.startPreview();
+            }
+        });
+    }
+
+    private void showDialogReceive() {
+        dialog_receive = new Dialog(ScanQR.this);
+        dialog_receive.setContentView(R.layout.dialog_receive);
+        dialog_receive.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog_receive.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialogbox_bg));
+        dialog_receive.setCancelable(false);
+
+        Button cancelBtnReceive = dialog_receive.findViewById(R.id.cancelBtn);
+        Button confirmBtnReceive = dialog_receive.findViewById(R.id.confirmBtn);
+        Spinner spinner1 = dialog_receive.findViewById(R.id.spinner1);
+
+        // Set choices for spinner1
+        String[] spinnerItems = new String[]{"Read", "Signed", "Modified"};
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        spinner1.setAdapter(spinnerAdapter);
+
+        cancelBtnReceive.setOnClickListener(view -> {
+            dialog_receive.dismiss();
+            isDialogDisplayed = false;
+            mCodeScanner.startPreview();
+        });
+
+        confirmBtnReceive.setOnClickListener(view -> {
+            // Handle confirm action
+            updateReceiver(spinner1);
+            dialog_receive.dismiss();
+            isDialogDisplayed = false;
+            mCodeScanner.startPreview();
+        });
+
+        dialog_receive.show();
+    }
+
+
     int editTextCounter = 0;
 
-    private void showDialog() {
-        // Stop the scanner to prevent further scans
-        mCodeScanner.stopPreview();
-
-        // Initialize and configure the dialog
+    private void showDialogSend() {
         dialog_send = new Dialog(ScanQR.this);
         dialog_send.setContentView(R.layout.dialog_send);
         dialog_send.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog_send.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialogbox_bg));
         dialog_send.setCancelable(false);
 
-        // Find and configure dialog buttons and edit text
         cancelBtn = dialog_send.findViewById(R.id.cancelBtn);
         confirmBtn = dialog_send.findViewById(R.id.confirmBtn);
         editEmail = dialog_send.findViewById(R.id.editEmail);
@@ -138,17 +195,17 @@ public class ScanQR extends AppCompatActivity {
         plusIcon = dialog_send.findViewById(R.id.plusIcon);
         ConstraintLayout constraintLayout = dialog_send.findViewById(R.id.constraintLayout);
 
-        // Set click listeners
         cancelBtn.setOnClickListener(view -> {
-            Log.d("ScanQR", "Cancel button clicked");
             dialog_send.dismiss();
             isDialogDisplayed = false;
-            // Restart the camera preview after dismissing the dialog
             mCodeScanner.startPreview();
         });
 
         confirmBtn.setOnClickListener(v -> {
             collectAndProcessEmails();
+            dialog_send.dismiss();
+            isDialogDisplayed = false;
+            mCodeScanner.startPreview();
         });
 
         plusIcon.setOnClickListener(view -> {
@@ -181,17 +238,13 @@ public class ScanQR extends AppCompatActivity {
 
             constraintSet.applyTo(constraintLayout);
 
-            // Update editEmail reference to the newly added EditText
             editEmail = newEditText;
 
-            // Increment the counter
             editTextCounter++;
         });
 
-        // Show the dialog
         dialog_send.show();
     }
-
 
     private void collectAndProcessEmails() {
         String title = editTitle.getText().toString().trim();
@@ -202,7 +255,6 @@ public class ScanQR extends AppCompatActivity {
                 EditText editText = (EditText) view;
                 String email = editText.getText().toString().trim();
                 if (!email.isEmpty()) {
-                    // Process the email and title
                     findUserIdByEmail(email, title);
                 }
             }
@@ -219,15 +271,14 @@ public class ScanQR extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userEmail = userSnapshot.child("email").getValue(String.class);
                     if (userEmail != null && userEmail.equals(email)) {
-                        String recipientId = userSnapshot.getKey();
-                        Toast.makeText(ScanQR.this, "User ID: " + recipientId, Toast.LENGTH_LONG).show();
+                        String userId = userSnapshot.getKey();
+                        updateRecipientData(userId, title);
                         found = true;
-                        addScannedDocument(recipientId, title);
                         break;
                     }
                 }
                 if (!found) {
-                    Toast.makeText(ScanQR.this, "Email not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScanQR.this, "User not found for email: " + email, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -238,7 +289,7 @@ public class ScanQR extends AppCompatActivity {
         });
     }
 
-    private void addScannedDocument(String recipientId, String title) {
+    private void updateRecipientData(String userId, String title) {
         String currentUserId = mAuth.getCurrentUser().getUid();
         String action = "Send"; // Automatically set action to "Send"
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -251,45 +302,62 @@ public class ScanQR extends AppCompatActivity {
         DatabaseReference documentRef = databaseReference.child("documents").child(scannedContent);
         documentRef.child("createdBy").setValue(currentUserId);
         documentRef.child("title").setValue(title); // Add title here
-        documentRef.child("recipients").child(recipientId).child("status").setValue("not scanned");
-        documentRef.child("recipients").child(recipientId).child("timestamp").setValue("N/A");
+        documentRef.child("recipients").child(userId).child("status").setValue("not scanned");
+        documentRef.child("recipients").child(userId).child("timestamp").setValue("N/A");
 
         // Adding scannedDocs to the recipient's node
-        DatabaseReference recipientRef = databaseReference.child("users").child(recipientId).child("scannedDocs").child(scannedContent);
+        DatabaseReference recipientRef = databaseReference.child("users").child(userId).child("scannedDocs").child(scannedContent);
         recipientRef.child("action").setValue(null);
         recipientRef.child("timestamp").setValue("N/A");
-        recipientRef.child("title").setValue(title); // Add title here
+        recipientRef.child("title").setValue(title);
 
-        Toast.makeText(ScanQR.this, "Document scanned and recorded successfully", Toast.LENGTH_SHORT).show();
-        dialog_send.dismiss();
-        isDialogDisplayed = false;
-        // Restart the camera preview after dismissing the dialog
-        mCodeScanner.startPreview();
+        Toast.makeText(ScanQR.this, "Data sent successfully!", Toast.LENGTH_SHORT).show();
     }
 
+    private void updateReceiver(Spinner spinner1) {
+        if (spinner1 != null) {
+            String spinnerAction = spinner1.getSelectedItem().toString();
+            Log.d("SpinnerAction", spinnerAction + " chosen");
 
+            // Get current user ID
+            String currentUserId = mAuth.getCurrentUser().getUid();
 
+            // Get references
+            DatabaseReference currentUserRef = databaseReference.child("users").child(currentUserId);
+            DatabaseReference scannedDocsRef = currentUserRef.child("scannedDocs").child(scannedContent);
+            DatabaseReference documentRef = databaseReference.child("documents").child(scannedContent);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isDialogDisplayed) {
-            mCodeScanner.startPreview();
+            // Get the name value
+            currentUserRef.child("name").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    String name = task.getResult().getValue(String.class);
+                    Log.d("UserName", "Name: " + name);
+
+                    // Update receiver node
+                    String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+                    scannedDocsRef.child("timestamp").setValue(timestamp);
+                    scannedDocsRef.child("action").setValue(spinnerAction);
+
+                    // Update documents node
+                    documentRef.child("recipients").child(currentUserId).child("status").setValue(spinnerAction);
+                    documentRef.child("recipients").child(currentUserId).child("timestamp").setValue(timestamp);
+                    documentRef.child("recipients").child(currentUserId).child("name").setValue(name); // Set name value here
+
+                } else {
+                    Log.e("DatabaseError", "Error fetching name: " + task.getException().getMessage());
+                }
+            });
+
+        } else {
+            Log.e("updateReceiver", "spinner1 is null");
         }
     }
 
-    @Override
-    protected void onPause() {
-        mCodeScanner.releaseResources();
-        super.onPause();
-    }
 
     private void setupPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
             makeRequest();
-        } else {
-            // Permission already granted, start scanner
-            mCodeScanner.startPreview();
         }
     }
 
@@ -301,13 +369,21 @@ public class ScanQR extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, start scanner
-                mCodeScanner.startPreview();
-            } else {
-                // Permission denied
-                Toast.makeText(this, "You need camera permission to use the scanner", Toast.LENGTH_SHORT).show();
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "You need the camera permission to be able to use this app", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
     }
 }
