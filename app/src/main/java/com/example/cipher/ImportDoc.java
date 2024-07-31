@@ -2,8 +2,10 @@ package com.example.cipher;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -11,16 +13,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.Manifest;
 
-import android.database.Cursor;
-import android.provider.OpenableColumns;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -33,6 +32,8 @@ public class ImportDoc extends AppCompatActivity {
     Uri fileUri;
     FirebaseStorage storage;
     StorageReference storageReference;
+    FirebaseAuth auth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class ImportDoc extends AppCompatActivity {
         webView = findViewById(R.id.webView);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         selectFileButton.setOnClickListener(view -> openFileChooser());
         uploadFileButton.setOnClickListener(view -> uploadFile());
@@ -111,17 +114,19 @@ public class ImportDoc extends AppCompatActivity {
     }
 
     private void uploadFile() {
-        if (fileUri != null) {
-            StorageReference fileReference = storageReference.child("uploads/" + System.currentTimeMillis());
+        if (fileUri != null && user != null) {
+            String uid = user.getUid();
+            String fileName = getFileName(fileUri);
+            StorageReference userFolder = storageReference.child("user/" + uid + "/" + System.currentTimeMillis() + "_" + fileName);
 
-            fileReference.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-                fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
+                userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
                     Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
                     webView.loadUrl(uri.toString());
                 });
             }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No file selected or user not authenticated", Toast.LENGTH_SHORT).show();
         }
     }
 }
