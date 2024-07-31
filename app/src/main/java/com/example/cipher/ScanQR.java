@@ -300,10 +300,13 @@ public class ScanQR extends AppCompatActivity {
         currentUserRef.child("title").setValue(title);
 
         DatabaseReference documentRef = databaseReference.child("documents").child(scannedContent);
-        documentRef.child("createdBy").setValue(currentUserId);
         documentRef.child("title").setValue(title); // Add title here
         documentRef.child("recipients").child(userId).child("status").setValue("not scanned");
         documentRef.child("recipients").child(userId).child("timestamp").setValue("N/A");
+
+        //Update sender details to documents node as well
+        documentRef.child("sender").child(currentUserId).child("status").setValue(action);
+        documentRef.child("sender").child(currentUserId).child("timestamp").setValue(timestamp);
 
         // Adding scannedDocs to the recipient's node
         DatabaseReference recipientRef = databaseReference.child("users").child(userId).child("scannedDocs").child(scannedContent);
