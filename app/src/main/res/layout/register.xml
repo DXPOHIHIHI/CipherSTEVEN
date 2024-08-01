@@ -112,8 +112,8 @@
 
     <ImageButton
         android:id="@+id/backbutton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:background="#00FFFFFF"
@@ -124,12 +124,13 @@
 
     <EditText
         android:id="@+id/registeremail"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,12 +138,13 @@
 
     <EditText
         android:id="@+id/registername"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Name"
         android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -150,12 +152,13 @@
 
     <EditText
         android:id="@+id/registerpassword"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

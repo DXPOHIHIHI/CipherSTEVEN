@@ -66,7 +66,7 @@
 
     <EditText
         android:id="@+id/loginemail"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
@@ -75,6 +75,7 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:singleLine="true"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/imageView6"
@@ -144,12 +145,13 @@
 
     <EditText
         android:id="@+id/loginpassword"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/imageView6"

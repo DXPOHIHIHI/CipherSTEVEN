@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -219,6 +220,10 @@ public class ScanQR extends AppCompatActivity {
             newEditText.setHint("Email");
             newEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             newEditText.setBackgroundColor(getResources().getColor(android.R.color.white));
+
+            newEditText.setTextColor(getResources().getColor(android.R.color.black));
+            newEditText.setHintTextColor(getResources().getColor(android.R.color.darker_gray));
+
             newEditText.setEms(10);
 
             // Add the new EditText to the ConstraintLayout
