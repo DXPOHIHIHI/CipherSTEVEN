@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class HomePage extends AppCompatActivity {
 
-    ImageButton toProfile, toScan, toTutorial, toTrack, toImport;
+    ImageButton toProfile, toScan, toTutorial, toTrack, toImport, toStorage;
     public static final String SHARED_PREFS = "sharedPrefs";
     TextView userNameTextView;
     EditText editTest;
@@ -70,6 +70,12 @@ public class HomePage extends AppCompatActivity {
         toImport = findViewById(R.id.toImport);
         toImport.setOnClickListener(view -> {
             Intent intent = new Intent(HomePage.this, ImportDoc.class);
+            startActivity(intent);
+        });
+
+        toStorage = findViewById(R.id.toStorage);
+        toStorage.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, StorageActivity.class);
             startActivity(intent);
         });
     }
