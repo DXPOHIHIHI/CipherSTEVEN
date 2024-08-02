@@ -192,8 +192,8 @@
 
     <ImageButton
         android:id="@+id/toHome"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:background="#00FFFFFF"
@@ -217,12 +217,14 @@
 
     <EditText
         android:id="@+id/profileemail"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:textColorHint="@color/lightergray"
         app:layout_constraintBottom_toBottomOf="@+id/imageView13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -230,12 +232,14 @@
 
     <EditText
         android:id="@+id/profilename"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Name"
         android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/lightergray"
         app:layout_constraintBottom_toBottomOf="@+id/imageView12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -243,12 +247,14 @@
 
     <EditText
         android:id="@+id/ProfileDepartment"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:ems="10"
         android:hint="Department"
         android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/lightergray"
         app:layout_constraintBottom_toBottomOf="@+id/imageView14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -256,13 +262,15 @@
 
     <EditText
         android:id="@+id/profilename2"
-        android:layout_width="340dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:editable="false"
         android:ems="10"
         android:hint="20218622"
         android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/lightergray"
         app:layout_constraintBottom_toBottomOf="@+id/imageView15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
