@@ -1,5 +1,6 @@
 package com.example.cipher;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class HomePage extends AppCompatActivity {
     TextView userNameTextView;
     EditText editTest;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

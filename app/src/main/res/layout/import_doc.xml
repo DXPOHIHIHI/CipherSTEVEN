@@ -32,6 +32,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/recipientEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Enter recipient's email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
     <Button
         android:id="@+id/selectFileButton"
         android:layout_width="0dp"
@@ -40,7 +51,7 @@
         android:text="Select File"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView26" />
+        app:layout_constraintTop_toBottomOf="@+id/recipientEmail" />
 
     <Button
         android:id="@+id/uploadFileButton"
@@ -61,4 +72,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
