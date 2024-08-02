@@ -149,10 +149,10 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                         recipientSnapshot.getRef().child("timestamp").setValue(System.currentTimeMillis());
 
                         Log.d("DocumentUpdate", "Recipient " + key + " updated with status: " + dropdownData);
-                    }
 
-                    if (!status.equals("Read") && !status.equals("Modified") && !status.equals("Signed")) {
-                        allStatusUpdated = false;
+                        if (status.equals("Read") || status.equals("Modified") || status.equals("Signed")) {
+                            allStatusUpdated = false;
+                        }
                     }
                 }
 
@@ -168,4 +168,5 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             }
         });
     }
+
 }
