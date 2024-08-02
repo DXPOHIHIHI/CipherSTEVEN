@@ -4,67 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/colorAccent"
-    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/purple"
+    app:cardCornerRadius="5dp"
     app:cardElevation="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="270dp"
         android:padding="15dp">
 
         <TextView
             android:id="@+id/scannedID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/interbold"
             android:text="Send to"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTitle" />
+            app:layout_constraintStart_toStartOf="@+id/editEmail"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <EditText
+            android:background="@drawable/rounded_corner"
             android:id="@+id/editEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:layout_width="180dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
+            android:fontFamily="@font/interbold"
             android:hint="Email"
             android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/lightergray"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/editTitle"
             app:layout_constraintHorizontal_bias="0.033"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/editTitle"
             app:layout_constraintTop_toBottomOf="@+id/scannedID" />
 
         <ImageView
             android:id="@+id/plusIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="44dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/editEmail"
+            app:layout_constraintEnd_toEndOf="@+id/editTitle"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/editEmail"
-            app:layout_constraintTop_toBottomOf="@+id/editTitle"
+            app:layout_constraintTop_toTopOf="@+id/editEmail"
             app:srcCompat="@drawable/icons8_plus_30" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/editTitle">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelBtn"
@@ -73,14 +77,15 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
+                android:fontFamily="@font/interbold"
                 android:padding="12dp"
                 android:shadowColor="#C8A7A7"
                 android:text="Cancel"
-                android:textColor="@color/black"
+                android:textColor="#BF5151"
                 android:textColorHighlight="#3F51B5"
                 android:textColorLink="#03A9F4"
                 android:textSize="16sp"
-                app:cornerRadius="20dp"
+                app:cornerRadius="5dp"
                 app:strokeColor="@color/black" />
 
             <com.google.android.material.button.MaterialButton
@@ -90,30 +95,40 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
+                android:fontFamily="@font/interbold"
                 android:padding="12dp"
                 android:shadowColor="#C8A7A7"
                 android:text="Confirm"
-                android:textColor="@color/black"
+                android:textColor="@color/purple"
                 android:textColorHighlight="#3F51B5"
                 android:textColorLink="#03A9F4"
                 android:textSize="16sp"
-                app:cornerRadius="20dp"
+                app:cornerRadius="5dp"
                 app:strokeColor="@color/black" />
         </LinearLayout>
 
         <EditText
+            android:background="@drawable/rounded_corner"
             android:id="@+id/editTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+
             android:ems="10"
+            android:fontFamily="@font/interbold"
             android:hint="Document Description"
             android:inputType="textMultiLine"
-            android:minLines="1"
             android:maxLines="5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:minLines="1"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/lightergray"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>
