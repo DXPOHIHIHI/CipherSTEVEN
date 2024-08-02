@@ -33,7 +33,7 @@ public class ImportDoc extends AppCompatActivity {
 
     private static final int PICK_FILE_REQUEST = 1;
     ImageButton toHome;
-    Button selectFileButton, uploadFileButton;
+    Button selectFileButton, uploadFileButton, testBtn;
     WebView webView;
     Uri fileUri;
     FirebaseStorage storage;
@@ -60,6 +60,16 @@ public class ImportDoc extends AppCompatActivity {
             startActivity(intent);
         });
 
+        testBtn = findViewById(R.id.testBtn);
+        testBtn.setOnClickListener(view -> {
+            String emailToFind = recipientEmail.getText().toString().trim();
+            if (!emailToFind.isEmpty()) {
+                testEmail(emailToFind);
+            } else {
+                Toast.makeText(ImportDoc.this, "Please enter an email to search", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         selectFileButton = findViewById(R.id.selectFileButton);
         uploadFileButton = findViewById(R.id.uploadFileButton);
         webView = findViewById(R.id.webView);
@@ -77,13 +87,45 @@ public class ImportDoc extends AppCompatActivity {
                 Toast.makeText(ImportDoc.this, "Checking recipient email...", Toast.LENGTH_SHORT).show();
                 checkRecipientEmail(email);
             } else {
+
+                // DIALOG BOX "This file will be uploaded to your own folder" "Cancel" "Confirm"
+
                 Toast.makeText(ImportDoc.this, "No recipient email entered. Proceeding with upload...", Toast.LENGTH_SHORT).show();
-                uploadFile();
+                //uploadFile();
             }
         });
 
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
+    }
+
+    private void testEmail(String email) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("users");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean found = false;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userEmail = userSnapshot.child("email").getValue(String.class);
+                    if (userEmail != null && userEmail.equals(email)) {
+                        String userId = userSnapshot.getKey();
+                        Toast.makeText(ImportDoc.this, "User ID: " + userId, Toast.LENGTH_LONG).show();
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    Toast.makeText(ImportDoc.this, "Email not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ImportDoc.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openFileChooser() {
@@ -133,21 +175,26 @@ public class ImportDoc extends AppCompatActivity {
     }
 
     private void checkRecipientEmail(String email) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("users");
+
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean emailFound = false;
+                boolean found = false;
+                String userId = "";
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userEmail = userSnapshot.child("email").getValue(String.class);
-                    if (email.equals(userEmail)) {
-                        emailFound = true;
+                    if (userEmail != null && userEmail.equals(email)) {
+                        userId = userSnapshot.getKey();
+                        Toast.makeText(ImportDoc.this, "User ID: " + userId, Toast.LENGTH_LONG).show();
+                        found = true;
                         break;
                     }
                 }
-
-                if (emailFound) {
+                if (found) {
                     Toast.makeText(ImportDoc.this, "Recipient Found", Toast.LENGTH_SHORT).show();
-                    uploadFile();
+                    uploadFile(userId);
                 } else {
                     Toast.makeText(ImportDoc.this, "Recipient not found", Toast.LENGTH_SHORT).show();
                 }
@@ -160,18 +207,38 @@ public class ImportDoc extends AppCompatActivity {
         });
     }
 
-    private void uploadFile() {
+    private void uploadFile(String userId) {
         if (fileUri != null && user != null) {
             String uid = user.getUid();
             String fileName = getFileName(fileUri);
-            StorageReference userFolder = storageReference.child("user/" + uid + "/" + System.currentTimeMillis() + "_" + fileName);
 
-            userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-                userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
-                    webView.loadUrl(uri.toString());
-                });
-            }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            if (userId.equals(uid)){
+                StorageReference userFolder = storageReference.child("user/" + uid + "/" + System.currentTimeMillis() + "_" + fileName);
+
+                userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
+                    userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                        webView.loadUrl(uri.toString());
+                    });
+                }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                StorageReference userFolder = storageReference.child("user/" + userId + "/" + System.currentTimeMillis() + "_" + fileName);
+
+                userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
+                    userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                        webView.loadUrl(uri.toString());
+                    });
+                }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+
+
+//            userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
+//                userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
+//                    Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
+//                    webView.loadUrl(uri.toString());
+//                });
+//            }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "No file selected or user not authenticated", Toast.LENGTH_SHORT).show();
         }
