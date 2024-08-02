@@ -1,7 +1,9 @@
 package com.example.cipher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ public class StorageActivity extends AppCompatActivity {
     private List<String> fileList;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
+    ImageButton toHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,12 @@ public class StorageActivity extends AppCompatActivity {
         fileList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList);
         listView.setAdapter(adapter);
+
+        toHome = findViewById(R.id.toHome);
+        toHome.setOnClickListener(view -> {
+            Intent intent = new Intent(StorageActivity.this, HomePage.class);
+            startActivity(intent);
+        });
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
