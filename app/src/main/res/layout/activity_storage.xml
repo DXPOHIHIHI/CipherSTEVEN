@@ -16,4 +16,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:dividerHeight="1dp"
         android:divider="@android:color/darker_gray"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
