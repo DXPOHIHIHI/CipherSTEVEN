@@ -9,6 +9,7 @@ import android.provider.OpenableColumns;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.Manifest;
@@ -20,6 +21,11 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,6 +40,8 @@ public class ImportDoc extends AppCompatActivity {
     StorageReference storageReference;
     FirebaseAuth auth;
     FirebaseUser user;
+    EditText recipientEmail;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +63,24 @@ public class ImportDoc extends AppCompatActivity {
         selectFileButton = findViewById(R.id.selectFileButton);
         uploadFileButton = findViewById(R.id.uploadFileButton);
         webView = findViewById(R.id.webView);
+        recipientEmail = findViewById(R.id.recipientEmail);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
         selectFileButton.setOnClickListener(view -> openFileChooser());
-        uploadFileButton.setOnClickListener(view -> uploadFile());
+        uploadFileButton.setOnClickListener(view -> {
+            String email = recipientEmail.getText().toString().trim();
+            if (!email.isEmpty()) {
+                Toast.makeText(ImportDoc.this, "Checking recipient email...", Toast.LENGTH_SHORT).show();
+                checkRecipientEmail(email);
+            } else {
+                Toast.makeText(ImportDoc.this, "No recipient email entered. Proceeding with upload...", Toast.LENGTH_SHORT).show();
+                uploadFile();
+            }
+        });
 
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
@@ -111,6 +130,34 @@ public class ImportDoc extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    private void checkRecipientEmail(String email) {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean emailFound = false;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userEmail = userSnapshot.child("email").getValue(String.class);
+                    if (email.equals(userEmail)) {
+                        emailFound = true;
+                        break;
+                    }
+                }
+
+                if (emailFound) {
+                    Toast.makeText(ImportDoc.this, "Recipient Found", Toast.LENGTH_SHORT).show();
+                    uploadFile();
+                } else {
+                    Toast.makeText(ImportDoc.this, "Recipient not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ImportDoc.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void uploadFile() {

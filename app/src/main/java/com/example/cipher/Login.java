@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.regex.Pattern;
 
@@ -39,6 +41,8 @@ public class Login extends AppCompatActivity {
     String userEmail, userPW;
     ImageButton btn;
     FirebaseAuth mAuth;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     public static final String SHARED_PREFS = "sharedPrefs";
 
     @Override
@@ -48,6 +52,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         email = findViewById(R.id.loginemail);
         pw = findViewById(R.id.loginpassword);
@@ -107,6 +113,10 @@ public class Login extends AppCompatActivity {
 
                             Log.d(TAG, "Login Successful: USER_ID = " + userId + ", NAME = " + username + ", DEPARTMENT = " + department);
                             Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                            // Create user folder in Firebase Storage
+                            createUserFolderIfNotExists(userId);
+
                             Intent intent = new Intent(Login.this, HomePage.class);
                             startActivity(intent);
                             finish();
@@ -166,5 +176,33 @@ public class Login extends AppCompatActivity {
     private boolean isValidEmail(String email) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+$");
         return pattern.matcher(email).matches();
+    }
+
+    private void createUserFolderIfNotExists(String uid) {
+        StorageReference userFolderRef = storageReference.child("user/" + uid + "/");
+        StorageReference placeholderRef = userFolderRef.child("placeholder");
+
+        // Create a placeholder file to ensure the folder exists
+        placeholderRef.putBytes(new byte[0])
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d(TAG, "User folder created with placeholder");
+
+                    // Add a listener to check for any files in the folder
+                    userFolderRef.listAll().addOnSuccessListener(listResult -> {
+                        boolean hasFiles = listResult.getItems().size() > 1; // Placeholder file should be the only item if no other files are uploaded
+
+                        if (hasFiles) {
+                            // If there are other files besides the placeholder, delete the placeholder
+                            placeholderRef.delete()
+                                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Placeholder file deleted as user uploaded files"))
+                                    .addOnFailureListener(e -> Log.e(TAG, "Failed to delete placeholder file: " + e.getMessage()));
+                        } else {
+                            Log.d(TAG, "No other files found in user folder");
+                        }
+                    }).addOnFailureListener(e -> Log.e(TAG, "Error listing files in user folder: " + e.getMessage()));
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error creating user folder: " + e.getMessage());
+                });
     }
 }

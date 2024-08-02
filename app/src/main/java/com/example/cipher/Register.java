@@ -16,6 +16,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -27,6 +30,8 @@ public class Register extends AppCompatActivity {
     ImageButton btn, backbtn;
     DatabaseReference databaseReference;
     FirebaseAuth mAuth;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,8 @@ public class Register extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
         mAuth = FirebaseAuth.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
 
         email = findViewById(R.id.registeremail);
         name = findViewById(R.id.registername);
@@ -89,6 +96,13 @@ public class Register extends AppCompatActivity {
                     userdataMap.put("name", userName);   // Use string values
 
                     databaseReference.child("users").child(currentUserID).updateChildren(userdataMap);
+
+                    // Call the method to create a folder in Firebase Storage
+                    createUserFolderInStorage(currentUserID);
+
+                    Intent intent = new Intent(Register.this, Login.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(Register.this, "ERROR: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -96,16 +110,25 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    private void createUserFolderInStorage(String userId) {
+        // Create a folder for the new user in Firebase Storage
+        StorageReference userFolder = storageReference.child("user/" + userId);
+        userFolder.child("placeholder.txt").putBytes(new byte[0])  // Create a placeholder file
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Register.this, "User folder created in storage", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Register.this, "Failed to create folder: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
     private boolean isValidEmail(String email) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+$");
         return pattern.matcher(email).matches();
     }
 }
-
-//{
-//  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
-//  "rules": {
-//    ".read": false,
-//    ".write": false
-//  }
-//}
