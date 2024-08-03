@@ -126,7 +126,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     private String formatTimestamp(Long timestamp) {
         if (timestamp == null) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:a", Locale.getDefault());
         return sdf.format(new Date(timestamp));
     }
 
