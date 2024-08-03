@@ -242,17 +242,19 @@ public class ScanQR extends AppCompatActivity {
             EditText newEditText = new EditText(ScanQR.this);
             newEditText.setId(View.generateViewId());
             newEditText.setLayoutParams(new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+                    625,
+                    125
             ));
             newEditText.setHint("Email");
             newEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-            newEditText.setBackgroundColor(getResources().getColor(android.R.color.white));
+            newEditText.setBackgroundResource(R.drawable.rounded_corner);
+
 
             newEditText.setTextColor(getResources().getColor(android.R.color.black));
             newEditText.setHintTextColor(getResources().getColor(android.R.color.darker_gray));
-
-            newEditText.setEms(10);
+            newEditText.setTextSize(16);
+            newEditText.setPadding(24,0,24,0);
+            // znewEditText.setEms(12);
 
             // Add the new EditText to the ConstraintLayout
             constraintLayout.addView(newEditText);

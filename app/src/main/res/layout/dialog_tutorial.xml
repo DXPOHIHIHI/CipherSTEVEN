@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="519dp"
+        android:background="@color/purple"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/infotxt5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/interreg"
+            android:text="Access or change your personal profile."
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img5"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toEndOf="@+id/img5"
+            app:layout_constraintTop_toTopOf="@+id/img5" />
+
+        <ImageView
+            android:id="@+id/img5"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="@+id/img4"
+            app:layout_constraintTop_toBottomOf="@+id/img4"
+            app:srcCompat="@drawable/userwhite" />
+
+        <TextView
+            android:id="@+id/infotxt4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/interreg"
+            android:text="Download files you can access."
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img4"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toEndOf="@+id/img4"
+            app:layout_constraintTop_toTopOf="@+id/img4" />
+
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="@+id/img2"
+            app:layout_constraintTop_toBottomOf="@+id/img2"
+            app:srcCompat="@drawable/importz" />
+
+        <TextView
+            android:id="@+id/infotxt3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/interreg"
+            android:text="Import and upload documents online."
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img3"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toEndOf="@+id/img3"
+            app:layout_constraintTop_toTopOf="@+id/img3" />
+
+        <ImageView
+            android:id="@+id/img4"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="@+id/img3"
+            app:layout_constraintTop_toBottomOf="@+id/img3"
+            app:srcCompat="@drawable/files" />
+
+        <TextView
+            android:id="@+id/infotxt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/interreg"
+            android:text="Track documents relevant to you."
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img2"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toEndOf="@+id/img2"
+            app:layout_constraintTop_toTopOf="@+id/img2" />
+
+        <TextView
+            android:id="@+id/infotxt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/interreg"
+            android:text="Scan QR to send or receive documents."
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img1"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toEndOf="@+id/img1"
+            app:layout_constraintTop_toTopOf="@+id/img1" />
+
+        <TextView
+            android:id="@+id/scannedID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/interbold"
+            android:text="How to use Cipher Application."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img5">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/infoClose"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/interbold"
+                android:padding="5dp"
+                android:shadowColor="#C8A7A7"
+                android:text="Close"
+                android:textColor="@color/black"
+                android:textColorHighlight="#3F51B5"
+                android:textColorLink="#03A9F4"
+                android:textSize="16sp"
+                app:cornerRadius="6dp"
+                app:strokeColor="@color/black" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="60dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="@+id/scannedID"
+            app:layout_constraintTop_toBottomOf="@+id/scannedID"
+            app:srcCompat="@drawable/qr" />
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="@+id/img1"
+            app:layout_constraintTop_toBottomOf="@+id/img1"
+            app:srcCompat="@drawable/track" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="@+id/scannedID"
+            app:layout_constraintStart_toStartOf="@+id/scannedID"
+            app:layout_constraintTop_toBottomOf="@+id/scannedID"
+            app:srcCompat="@drawable/icons8_info_popup_50" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
