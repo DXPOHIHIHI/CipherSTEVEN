@@ -1,12 +1,17 @@
 package com.example.cipher;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +26,28 @@ public class HomePage extends AppCompatActivity {
     ImageButton toProfile, toScan, toTutorial, toTrack, toImport, toStorage;
     public static final String SHARED_PREFS = "sharedPrefs";
     TextView userNameTextView;
+    Dialog dialog_tutorial;
     EditText editTest;
 
     @SuppressLint("MissingInflatedId")
     @Override
+
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.homepage);
+
+
+        toTutorial = findViewById(R.id.toTutorial);
+        toTutorial.setOnClickListener(view -> {
+            showTutorialDialog();dialog_tutorial.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        });
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -76,7 +95,6 @@ public class HomePage extends AppCompatActivity {
             intent.putExtra("EMAIL", email);
             startActivity(intent);
 
-
         });
 
         toImport = findViewById(R.id.toImport);
@@ -90,5 +108,20 @@ public class HomePage extends AppCompatActivity {
             Intent intent = new Intent(HomePage.this, StorageActivity.class);
             startActivity(intent);
         });
+
+
+
+    }
+
+    private void showTutorialDialog() {
+        dialog_tutorial = new Dialog(this);
+        dialog_tutorial.setContentView(R.layout.dialog_tutorial);
+
+        dialog_tutorial.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button infoClose = dialog_tutorial.findViewById(R.id.infoClose);
+        infoClose.setOnClickListener(v -> dialog_tutorial.dismiss());
+
+        dialog_tutorial.show();
     }
 }

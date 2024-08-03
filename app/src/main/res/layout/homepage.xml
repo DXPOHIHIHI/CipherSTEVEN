@@ -8,69 +8,81 @@
     android:background="#FFFFFF"
     tools:context=".HomePage">
 
+    <ImageButton
+        android:id="@+id/toStorage"
+        android:layout_width="0dp"
+        android:layout_height="103dp"
+        android:background="#00FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingTop="6dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="6dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/textView28"
+        app:srcCompat="@drawable/longerfiles" />
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="206dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/sfbold"
+        android:text="Files"
+        android:textAlignment="center"
+        android:textColor="@color/purple"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/toScan" />
+
     <TextView
         android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sfbold"
         android:text="Track"
         android:textAlignment="center"
         android:textColor="@color/purple"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sfbold"
         android:text="Scan"
         android:textAlignment="center"
         android:textColor="@color/purple"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="0dp"
+        android:layout_width="206dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sfbold"
         android:text="Import"
         android:textAlignment="center"
         android:textColor="@color/purple"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toScan" />
 
     <ImageButton
         android:id="@+id/toImport"
         android:layout_width="0dp"
-        android:layout_height="145dp"
-        android:background="#00FFFFFF"
-        android:paddingLeft="16dp"
-        android:paddingTop="6dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="6dp"
-        android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:srcCompat="@drawable/importz" />
-
-    <ImageButton
-        android:id="@+id/toTrack"
-        android:layout_width="0dp"
-        android:layout_height="145dp"
+        android:layout_height="103dp"
         android:background="#00FFFFFF"
         android:paddingLeft="16dp"
         android:paddingTop="6dp"
@@ -78,24 +90,39 @@
         android:paddingBottom="6dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:srcCompat="@drawable/track" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:srcCompat="@drawable/longerimport" />
 
     <ImageButton
-        android:id="@+id/toScan"
+        android:id="@+id/toTrack"
         android:layout_width="0dp"
-        android:layout_height="145dp"
+        android:layout_height="100dp"
         android:background="#00FFFFFF"
         android:paddingLeft="16dp"
         android:paddingTop="6dp"
         android:paddingRight="16dp"
         android:paddingBottom="6dp"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/toScan"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:srcCompat="@drawable/longertrack" />
+
+    <ImageButton
+        android:id="@+id/toScan"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="#00FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingTop="6dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="6dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:srcCompat="@drawable/qr" />
+        app:srcCompat="@drawable/longerqr" />
 
     <TextView
         android:id="@+id/Design"
@@ -138,18 +165,11 @@
         app:srcCompat="@drawable/designbanner" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.66" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <ImageButton
         android:id="@+id/toProfile"
@@ -168,28 +188,14 @@
         android:id="@+id/toTutorial"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
         android:scaleType="fitCenter"
-        app:tint="@color/purple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/toProfile"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="@+id/toProfile"
-        app:srcCompat="@drawable/help" />
-
-    <ImageButton
-        android:id="@+id/toStorage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="32dp"
-        android:background="#00FFFFFF"
-        android:scaleType="fitCenter"
-        app:tint="@color/purple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/storage_icon" />
+        app:srcCompat="@drawable/help"
+        app:tint="@color/purple" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
