@@ -60,15 +60,6 @@ public class ImportDoc extends AppCompatActivity {
             startActivity(intent);
         });
 
-        testBtn = findViewById(R.id.testBtn);
-        testBtn.setOnClickListener(view -> {
-            String emailToFind = recipientEmail.getText().toString().trim();
-            if (!emailToFind.isEmpty()) {
-                testEmail(emailToFind);
-            } else {
-                Toast.makeText(ImportDoc.this, "Please enter an email to search", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         selectFileButton = findViewById(R.id.selectFileButton);
         uploadFileButton = findViewById(R.id.uploadFileButton);
