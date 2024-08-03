@@ -11,6 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
 
@@ -41,6 +42,7 @@ public class ImportDoc extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser user;
     EditText recipientEmail;
+    TextView selectedFileNameTextView; // New TextView to display selected file name
     DatabaseReference databaseReference;
 
     @Override
@@ -65,6 +67,7 @@ public class ImportDoc extends AppCompatActivity {
         uploadFileButton = findViewById(R.id.uploadFileButton);
         webView = findViewById(R.id.webView);
         recipientEmail = findViewById(R.id.recipientEmail);
+        selectedFileNameTextView = findViewById(R.id.selectedFileNameTextView); // Initialize the TextView
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         auth = FirebaseAuth.getInstance();
@@ -78,11 +81,8 @@ public class ImportDoc extends AppCompatActivity {
                 Toast.makeText(ImportDoc.this, "Checking recipient email...", Toast.LENGTH_SHORT).show();
                 checkRecipientEmail(email);
             } else {
-
-                // DIALOG BOX "This file will be uploaded to your own folder" "Cancel" "Confirm"
-
                 Toast.makeText(ImportDoc.this, "No recipient email entered. Proceeding with upload...", Toast.LENGTH_SHORT).show();
-                //uploadFile();
+                uploadFile(user.getUid());
             }
         });
 
@@ -128,66 +128,44 @@ public class ImportDoc extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             fileUri = data.getData();
-
-            // Get the file name from the URI
             String fileName = getFileName(fileUri);
-            Toast.makeText(this, "File Selected: " + fileName, Toast.LENGTH_LONG).show();
+            selectedFileNameTextView.setText(fileName); // Update the TextView with the file name
         }
     }
 
     private String getFileName(Uri uri) {
-        String result = null;
+        String fileName = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = null;
-            try {
-                cursor = getContentResolver().query(uri, null, null, null, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (nameIndex != -1) {
-                        result = cursor.getString(nameIndex);
-                    }
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (nameIndex >= 0) {
+                    fileName = cursor.getString(nameIndex);
                 }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
+                cursor.close();
             }
         }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
+        if (fileName == null) {
+            fileName = uri.getLastPathSegment();
         }
-        return result;
+        return fileName;
     }
 
     private void checkRecipientEmail(String email) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://cipher-8035c-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("users");
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean found = false;
-                String userId = "";
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String userEmail = userSnapshot.child("email").getValue(String.class);
-                    if (userEmail != null && userEmail.equals(email)) {
-                        userId = userSnapshot.getKey();
-                        Toast.makeText(ImportDoc.this, "User ID: " + userId, Toast.LENGTH_LONG).show();
-                        found = true;
-                        break;
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String recipientId = userSnapshot.getKey();
+                        uploadFile(recipientId);
                     }
-                }
-                if (found) {
-                    Toast.makeText(ImportDoc.this, "Recipient Found", Toast.LENGTH_SHORT).show();
-                    uploadFile(userId);
                 } else {
-                    Toast.makeText(ImportDoc.this, "Recipient not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImportDoc.this, "Recipient email not found. Uploading to sender's folder instead.", Toast.LENGTH_SHORT).show();
+                    uploadFile(user.getUid());
                 }
             }
 
@@ -199,39 +177,19 @@ public class ImportDoc extends AppCompatActivity {
     }
 
     private void uploadFile(String userId) {
-        if (fileUri != null && user != null) {
-            String uid = user.getUid();
-            String fileName = getFileName(fileUri);
-
-            if (userId.equals(uid)){
-                StorageReference userFolder = storageReference.child("user/" + uid + "/" + System.currentTimeMillis() + "_" + fileName);
-
-                userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-                    userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
-                        Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
-                        webView.loadUrl(uri.toString());
-                    });
-                }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            } else {
-                StorageReference userFolder = storageReference.child("user/" + userId + "/" + System.currentTimeMillis() + "_" + fileName);
-
-                userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-                    userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
-                        Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
-                        webView.loadUrl(uri.toString());
-                    });
-                }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-
-
-//            userFolder.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-//                userFolder.getDownloadUrl().addOnSuccessListener(uri -> {
-//                    Toast.makeText(ImportDoc.this, "Upload successful", Toast.LENGTH_SHORT).show();
-//                    webView.loadUrl(uri.toString());
-//                });
-//            }).addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (fileUri != null) {
+            StorageReference fileRef = storageReference.child("user/" + userId + "/" + getFileName(fileUri));
+            fileRef.putFile(fileUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        Toast.makeText(ImportDoc.this, "File uploaded successfully", Toast.LENGTH_SHORT).show();
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String downloadUrl = uri.toString();
+                            webView.loadUrl(downloadUrl);
+                        });
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(ImportDoc.this, "File upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
-            Toast.makeText(this, "No file selected or user not authenticated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No file selected to upload", Toast.LENGTH_SHORT).show();
         }
     }
 }
