@@ -54,7 +54,7 @@ public class ScanQR extends AppCompatActivity {
     private ImageButton toHome;
     private TextView scanTxt;
 
-    Dialog dialog_send, dialog_receive;
+    Dialog dialog_send, dialog_receive, dialog_not_receiver;
     Button cancelBtn, confirmBtn;
     EditText editEmail, editTitle;
     Spinner spinner1;
@@ -118,20 +118,30 @@ public class ScanQR extends AppCompatActivity {
 
     private void handleScanResult(String scannedContent) {
         String currentUserId = mAuth.getCurrentUser().getUid();
-        DatabaseReference userRef = databaseReference.child("users").child(currentUserId).child("scannedDocs");
+        DatabaseReference documentRef = databaseReference.child("documents").child(scannedContent);
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        documentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean found = false;
-                for (DataSnapshot docSnapshot : dataSnapshot.getChildren()) {
-                    if (docSnapshot.getKey().equals(scannedContent)) {
-                        found = true;
-                        break;
+                if (dataSnapshot.exists()) {
+                    boolean isReceiver = false;
+                    DataSnapshot recipientsSnapshot = dataSnapshot.child("recipients");
+
+                    for (DataSnapshot recipient : recipientsSnapshot.getChildren()) {
+                        if (recipient.getKey().equals(currentUserId)) {
+                            isReceiver = true;
+                            break;
+                        }
                     }
-                }
-                if (found) {
-                    showDialogReceive();
+
+                    if (isReceiver) {
+                        showDialogReceive();
+                    } else {
+                        showDialogNotReceiver();
+                        //Toast.makeText(ScanQR.this, "You are not the intended receiver of this document.", Toast.LENGTH_SHORT).show();
+                        isDialogDisplayed = false;
+                        mCodeScanner.startPreview();
+                    }
                 } else {
                     showDialogSend();
                 }
@@ -144,6 +154,24 @@ public class ScanQR extends AppCompatActivity {
                 mCodeScanner.startPreview();
             }
         });
+    }
+
+    private void showDialogNotReceiver(){
+        dialog_not_receiver = new Dialog(ScanQR.this);
+        dialog_not_receiver.setContentView(R.layout.dialog_not_receiver);
+        dialog_not_receiver.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog_not_receiver.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialogbox_bg));
+        dialog_not_receiver.setCancelable(false);
+
+        Button confirmBtn = dialog_not_receiver.findViewById(R.id.confirmBtn);
+
+        confirmBtn.setOnClickListener(v -> {
+            dialog_not_receiver.dismiss();
+            isDialogDisplayed = false;
+            mCodeScanner.startPreview();
+        });
+
+        dialog_not_receiver.show();
     }
 
     private void showDialogReceive() {
