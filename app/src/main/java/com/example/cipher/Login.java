@@ -107,6 +107,7 @@ public class Login extends AppCompatActivity {
                             String username = dataSnapshot.child("name").getValue(String.class);
                             String department = dataSnapshot.child("department").getValue(String.class);
 
+
                             editor.putString("name", username);
                             editor.putString("department", department != null ? department : "Department");
                             editor.apply();
@@ -121,6 +122,7 @@ public class Login extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
+
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {

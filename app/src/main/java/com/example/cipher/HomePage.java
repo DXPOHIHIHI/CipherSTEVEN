@@ -65,8 +65,18 @@ public class HomePage extends AppCompatActivity {
 
         toTrack = findViewById(R.id.toTrack);
         toTrack.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences1 = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            String userId = sharedPreferences1.getString("userId", null);
+            String name = sharedPreferences1.getString("name", null);
+            String email = sharedPreferences1.getString("email", null);
+
             Intent intent = new Intent(HomePage.this, TrackDoc.class);
+            intent.putExtra("USER_ID", userId);
+            intent.putExtra("NAME", name);
+            intent.putExtra("EMAIL", email);
             startActivity(intent);
+
+
         });
 
         toImport = findViewById(R.id.toImport);
