@@ -83,7 +83,7 @@ public class ScanQR extends AppCompatActivity {
         dropdown.setAdapter(adapter);
 
         toHome = findViewById(R.id.toHome);
-        scanTxt = findViewById(R.id.scanTxt);
+        //scanTxt = findViewById(R.id.scanTxt);
 
         toHome.setOnClickListener(view -> {
             Intent intent = new Intent(ScanQR.this, HomePage.class);
@@ -99,7 +99,7 @@ public class ScanQR extends AppCompatActivity {
                     if (!isDialogDisplayed) {
                         isDialogDisplayed = true;
                         scannedContent = result.getText();
-                        scanTxt.setText(scannedContent); // Set the scanned content to the TextView
+                        //scanTxt.setText(scannedContent); // Set the scanned content to the TextView
                         handleScanResult(scannedContent);
                     }
                 });
