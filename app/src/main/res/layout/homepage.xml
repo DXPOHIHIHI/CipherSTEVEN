@@ -171,11 +171,25 @@
         android:layout_marginBottom="32dp"
         android:background="#00FFFFFF"
         android:scaleType="fitCenter"
-        android:tint="@color/purple"
+        app:tint="@color/purple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/toProfile"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="@+id/toProfile"
         app:srcCompat="@drawable/help" />
+
+    <ImageButton
+        android:id="@+id/toStorage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="32dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        app:tint="@color/purple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/storage_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.cipher;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,11 +18,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class HomePage extends AppCompatActivity {
 
-    ImageButton toProfile, toScan, toTutorial, toTrack, toImport;
+    ImageButton toProfile, toScan, toTutorial, toTrack, toImport, toStorage;
     public static final String SHARED_PREFS = "sharedPrefs";
     TextView userNameTextView;
     EditText editTest;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +82,12 @@ public class HomePage extends AppCompatActivity {
         toImport = findViewById(R.id.toImport);
         toImport.setOnClickListener(view -> {
             Intent intent = new Intent(HomePage.this, ImportDoc.class);
+            startActivity(intent);
+        });
+
+        toStorage = findViewById(R.id.toStorage);
+        toStorage.setOnClickListener(view -> {
+            Intent intent = new Intent(HomePage.this, StorageActivity.class);
             startActivity(intent);
         });
     }
