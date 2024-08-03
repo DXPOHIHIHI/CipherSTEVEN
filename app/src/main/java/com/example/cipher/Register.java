@@ -52,7 +52,7 @@ public class Register extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userEmail = email.getText().toString().trim();
+                userEmail = email.getText().toString().trim().toLowerCase();
                 userName = name.getText().toString().trim();
                 userPW = pw.getText().toString().trim();
 
@@ -125,7 +125,6 @@ public class Register extends AppCompatActivity {
                     }
                 });
     }
-
 
     private boolean isValidEmail(String email) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+$");
